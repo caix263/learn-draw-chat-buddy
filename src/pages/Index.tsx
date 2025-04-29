@@ -3,10 +3,12 @@ import { useState } from 'react';
 import ChatInterface from '@/components/ChatInterface';
 import Whiteboard from '@/components/Whiteboard';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 const Index = () => {
   const isMobile = useIsMobile();
-  const [activeTab, setActiveTab] = useState<'chat' | 'whiteboard'>('chat');
+  const [activeTab, setActiveTab] = useState<'chat' | 'whiteboard'>('whiteboard'); // Default to whiteboard
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-tutor-secondary p-4 md:p-8">
@@ -17,45 +19,43 @@ const Index = () => {
         </header>
         
         {isMobile ? (
-          <>
-            <div className="flex border-b border-gray-200 mb-4">
-              <button 
-                className={`flex-1 py-2 px-4 text-center ${activeTab === 'chat' ? 'border-b-2 border-tutor-primary text-tutor-primary font-medium' : 'text-gray-500'}`}
-                onClick={() => setActiveTab('chat')}
-              >
-                Chat
-              </button>
-              <button 
-                className={`flex-1 py-2 px-4 text-center ${activeTab === 'whiteboard' ? 'border-b-2 border-tutor-primary text-tutor-primary font-medium' : 'text-gray-500'}`}
-                onClick={() => setActiveTab('whiteboard')}
-              >
-                Whiteboard
-              </button>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              {activeTab === 'chat' ? (
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden h-[calc(100vh-180px)]">
+            <Tabs defaultValue="whiteboard" className="w-full">
+              <TabsList className="grid grid-cols-2 w-full">
+                <TabsTrigger value="chat">Chat</TabsTrigger>
+                <TabsTrigger value="whiteboard">Whiteboard</TabsTrigger>
+              </TabsList>
+              <TabsContent value="chat" className="h-[calc(100vh-240px)]">
                 <ChatInterface />
-              ) : (
+              </TabsContent>
+              <TabsContent value="whiteboard" className="h-[calc(100vh-240px)]">
                 <Whiteboard />
-              )}
-            </div>
-          </>
+              </TabsContent>
+            </Tabs>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-180px)]">
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="p-4 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-800">Chat with AI Tutor</h2>
-              </div>
-              <ChatInterface />
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="p-4 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-800">Interactive Whiteboard</h2>
-              </div>
-              <Whiteboard />
-            </div>
+          <div className="h-[calc(100vh-180px)]">
+            <ResizablePanelGroup direction="horizontal" className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <ResizablePanel defaultSize={25} minSize={20}>
+                <div className="p-4 border-b border-gray-200">
+                  <h2 className="text-xl font-semibold text-gray-800">Chat with AI Tutor</h2>
+                </div>
+                <div className="h-[calc(100vh-244px)]">
+                  <ChatInterface />
+                </div>
+              </ResizablePanel>
+              
+              <ResizableHandle withHandle />
+              
+              <ResizablePanel defaultSize={75} minSize={40}>
+                <div className="p-4 border-b border-gray-200">
+                  <h2 className="text-xl font-semibold text-gray-800">Interactive Whiteboard</h2>
+                </div>
+                <div className="h-[calc(100vh-244px)]">
+                  <Whiteboard />
+                </div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
           </div>
         )}
         

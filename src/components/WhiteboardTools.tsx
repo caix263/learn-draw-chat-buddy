@@ -1,11 +1,12 @@
+
 import { FC } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Canvas } from 'fabric';
+import { Canvas, Rect, Circle, Textbox } from 'fabric';
 import { 
   Pencil, 
   Square, 
-  Circle, 
+  Circle as CircleIcon, 
   Text, 
   Eraser, 
   MousePointer, 
@@ -51,7 +52,7 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
     if (!fabricCanvas) return;
     setActiveTool('select');
     
-    const rect = new fabric.Rect({
+    const rect = new Rect({
       left: 100,
       top: 100,
       fill: activeColor,
@@ -68,7 +69,7 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
     if (!fabricCanvas) return;
     setActiveTool('select');
     
-    const circle = new fabric.Circle({
+    const circle = new Circle({
       left: 160,
       top: 100,
       fill: activeColor,
@@ -84,7 +85,7 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
     if (!fabricCanvas) return;
     setActiveTool('select');
     
-    const text = new fabric.Textbox('Edit this text', {
+    const text = new Textbox('Edit this text', {
       left: 100,
       top: 100,
       fontFamily: 'Arial',
@@ -155,7 +156,7 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
                 className="h-8 w-8" 
                 onClick={handleAddCircle}
               >
-                <Circle className="h-4 w-4" />
+                <CircleIcon className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Add Circle</TooltipContent>
