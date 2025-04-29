@@ -3,6 +3,11 @@ import { Canvas, Textbox, Line, Rect, Circle, Triangle, Path, Polygon, IText } f
 
 // Example for math equations or formulas
 export const createMathExample = (canvas: Canvas) => {
+  // Center the elements based on canvas dimensions
+  const canvasWidth = canvas.width || 600;
+  const canvasHeight = canvas.height || 500;
+  const centerX = canvasWidth / 2;
+  
   // Add title
   const title = new Textbox('Quadratic Formula', {
     left: 50,
@@ -47,8 +52,16 @@ export const createMathExample = (canvas: Canvas) => {
   canvas.add(title, formula, explanation, example);
 };
 
-// Example for chemistry diagrams
+// Example for chemistry diagrams - FIXED positioning to prevent cut-off
 export const createChemistryExample = (canvas: Canvas) => {
+  // Get canvas dimensions to better position elements
+  const canvasWidth = canvas.width || 600;
+  const canvasHeight = canvas.height || 500;
+  
+  // Calculate center points for better positioning
+  const centerX = canvasWidth / 2;
+  const centerY = canvasHeight / 2;
+  
   // Add title
   const title = new Textbox('Water Molecule (H₂O)', {
     left: 50,
@@ -59,20 +72,20 @@ export const createChemistryExample = (canvas: Canvas) => {
     fill: '#2563eb',
   });
   
-  // Create oxygen atom
+  // Create oxygen atom - centered
   const oxygen = new Circle({
-    left: 200,
-    top: 150,
-    radius: 40,
+    left: centerX - 40, // Center the oxygen horizontally
+    top: centerY - 30,  // Position in upper half of canvas
+    radius: 35,         // Slightly smaller radius
     fill: '#e11d48',
     stroke: '#881337',
     strokeWidth: 2,
   });
   
-  // Create hydrogen atoms
+  // Create hydrogen atoms - ensure they're fully visible
   const hydrogen1 = new Circle({
-    left: 130,
-    top: 110,
+    left: centerX - 100, // Position further left from oxygen
+    top: centerY - 70,   // Position above and left of oxygen
     radius: 25,
     fill: '#2563eb',
     stroke: '#1e40af',
@@ -80,19 +93,19 @@ export const createChemistryExample = (canvas: Canvas) => {
   });
   
   const hydrogen2 = new Circle({
-    left: 270,
-    top: 110,
+    left: centerX + 30, // Position right of oxygen
+    top: centerY - 70,  // Position above and right of oxygen
     radius: 25,
     fill: '#2563eb',
     stroke: '#1e40af',
     strokeWidth: 2,
   });
   
-  // Add bonds
+  // Add bonds - adjust to connect the atoms at their new positions
   const bond1 = new Line([
     oxygen.left + oxygen.radius - 10, 
-    oxygen.top + oxygen.radius - 10,
-    hydrogen1.left + hydrogen1.radius + 10, 
+    oxygen.top + oxygen.radius - 20,
+    hydrogen1.left + hydrogen1.radius + 15, 
     hydrogen1.top + hydrogen1.radius + 10
   ], {
     stroke: '#000000',
@@ -101,8 +114,8 @@ export const createChemistryExample = (canvas: Canvas) => {
   
   const bond2 = new Line([
     oxygen.left + oxygen.radius + 10, 
-    oxygen.top + oxygen.radius - 10,
-    hydrogen2.left + hydrogen2.radius - 10, 
+    oxygen.top + oxygen.radius - 20,
+    hydrogen2.left + hydrogen2.radius - 15, 
     hydrogen2.top + hydrogen2.radius + 10
   ], {
     stroke: '#000000',
@@ -111,8 +124,8 @@ export const createChemistryExample = (canvas: Canvas) => {
   
   // Add labels
   const oxygenLabel = new Textbox('O', {
-    left: oxygen.left + 30,
-    top: oxygen.top + 30,
+    left: oxygen.left + 25,
+    top: oxygen.top + 25,
     fontSize: 24,
     fontWeight: 'bold',
     fontFamily: 'Arial',
@@ -120,7 +133,7 @@ export const createChemistryExample = (canvas: Canvas) => {
   });
   
   const h1Label = new Textbox('H', {
-    left: hydrogen1.left + 20,
+    left: hydrogen1.left + 15,
     top: hydrogen1.top + 15,
     fontSize: 20,
     fontWeight: 'bold',
@@ -129,7 +142,7 @@ export const createChemistryExample = (canvas: Canvas) => {
   });
   
   const h2Label = new Textbox('H', {
-    left: hydrogen2.left + 20,
+    left: hydrogen2.left + 15,
     top: hydrogen2.top + 15,
     fontSize: 20,
     fontWeight: 'bold',
@@ -137,11 +150,11 @@ export const createChemistryExample = (canvas: Canvas) => {
     fill: '#000000',
   });
   
-  // Add explanation
+  // Add explanation - positioned lower to avoid overlap
   const explanation = new Textbox('Water molecule consists of one oxygen atom covalently bonded to two hydrogen atoms. The bond angle is approximately 104.5°.', {
     left: 50,
-    top: 250,
-    width: 400,
+    top: centerY + 70, // Position below the molecule
+    width: canvasWidth - 100,
     fontSize: 16,
     fontFamily: 'Arial',
     lineHeight: 1.5,
@@ -152,8 +165,16 @@ export const createChemistryExample = (canvas: Canvas) => {
   canvas.add(title, oxygen, hydrogen1, hydrogen2, bond1, bond2, oxygenLabel, h1Label, h2Label, explanation);
 };
 
-// Example for flowchart diagrams
+// Example for flowchart diagrams - Scale down to ensure fit
 export const createFlowchartExample = (canvas: Canvas) => {
+  // Get canvas dimensions
+  const canvasWidth = canvas.width || 600;
+  const canvasHeight = canvas.height || 500;
+  const centerX = canvasWidth / 2;
+  
+  // Scale factor to ensure flowchart fits
+  const scale = Math.min(canvasWidth / 700, canvasHeight / 600, 0.85);
+  
   // Add title
   const title = new Textbox('Problem Solving Process', {
     left: 50,
@@ -164,34 +185,38 @@ export const createFlowchartExample = (canvas: Canvas) => {
     fill: '#2563eb',
   });
   
+  // Horizontal offset to center the flowchart
+  const offsetX = centerX - 290 * scale;
+  
   // Create flowchart shapes
   const startRect = new Rect({
-    left: 200,
-    top: 80,
-    width: 180,
-    height: 60,
-    rx: 20,
-    ry: 20,
+    left: offsetX + 200 * scale,
+    top: 80 * scale,
+    width: 180 * scale,
+    height: 60 * scale,
+    rx: 20 * scale,
+    ry: 20 * scale,
     fill: '#34d399',
     stroke: '#047857',
     strokeWidth: 2,
   });
   
   const process1Rect = new Rect({
-    left: 200,
-    top: 180,
-    width: 180,
-    height: 60,
+    left: offsetX + 200 * scale,
+    top: 180 * scale,
+    width: 180 * scale,
+    height: 60 * scale,
     fill: '#93c5fd',
     stroke: '#1e40af',
     strokeWidth: 2,
   });
   
+  // Adjust the diamond shape to fit
   const decisionDiamond = new Polygon([
-    {x: 290, y: 280},
-    {x: 380, y: 330},
-    {x: 290, y: 380},
-    {x: 200, y: 330},
+    {x: offsetX + 290 * scale, y: 280 * scale},
+    {x: offsetX + 380 * scale, y: 330 * scale},
+    {x: offsetX + 290 * scale, y: 380 * scale},
+    {x: offsetX + 200 * scale, y: 330 * scale},
   ], {
     fill: '#fde68a',
     stroke: '#92400e',
@@ -199,22 +224,22 @@ export const createFlowchartExample = (canvas: Canvas) => {
   });
   
   const process2Rect = new Rect({
-    left: 400,
-    top: 330,
-    width: 180,
-    height: 60,
+    left: offsetX + 400 * scale,
+    top: 330 * scale,
+    width: 180 * scale,
+    height: 60 * scale,
     fill: '#93c5fd',
     stroke: '#1e40af',
     strokeWidth: 2,
   });
   
   const endRect = new Rect({
-    left: 200,
-    top: 430,
-    width: 180,
-    height: 60,
-    rx: 20,
-    ry: 20,
+    left: offsetX + 200 * scale,
+    top: 430 * scale,
+    width: 180 * scale,
+    height: 60 * scale,
+    rx: 20 * scale,
+    ry: 20 * scale,
     fill: '#f87171',
     stroke: '#991b1b',
     strokeWidth: 2,
@@ -222,8 +247,8 @@ export const createFlowchartExample = (canvas: Canvas) => {
   
   // Add connecting arrows
   const arrow1 = new Line([
-    290, 140,
-    290, 180
+    offsetX + 290 * scale, 140 * scale,
+    offsetX + 290 * scale, 180 * scale
   ], {
     stroke: '#000000',
     strokeWidth: 2,
@@ -231,8 +256,8 @@ export const createFlowchartExample = (canvas: Canvas) => {
   });
   
   const arrow2 = new Line([
-    290, 240,
-    290, 280
+    offsetX + 290 * scale, 240 * scale,
+    offsetX + 290 * scale, 280 * scale
   ], {
     stroke: '#000000',
     strokeWidth: 2,
@@ -240,8 +265,8 @@ export const createFlowchartExample = (canvas: Canvas) => {
   });
   
   const arrow3 = new Line([
-    380, 330,
-    400, 330
+    offsetX + 380 * scale, 330 * scale,
+    offsetX + 400 * scale, 330 * scale
   ], {
     stroke: '#000000',
     strokeWidth: 2,
@@ -249,37 +274,37 @@ export const createFlowchartExample = (canvas: Canvas) => {
   });
   
   const arrow4 = new Line([
-    290, 380,
-    290, 430
+    offsetX + 290 * scale, 380 * scale,
+    offsetX + 290 * scale, 430 * scale
   ], {
     stroke: '#000000',
     strokeWidth: 2,
     strokeLineCap: 'round',
   });
   
-  // Add text labels
+  // Add text labels - adjusted for scale
   const startText = new Textbox('Start', {
-    left: 235,
-    top: 97,
-    fontSize: 18,
+    left: offsetX + 235 * scale,
+    top: 97 * scale,
+    fontSize: 18 * scale,
     fontWeight: 'bold',
     fontFamily: 'Arial',
     fill: '#000000',
   });
   
   const process1Text = new Textbox('Identify Problem', {
-    left: 215,
-    top: 197,
-    fontSize: 18,
+    left: offsetX + 215 * scale,
+    top: 197 * scale,
+    fontSize: 18 * scale,
     fontWeight: 'bold',
     fontFamily: 'Arial',
     fill: '#000000',
   });
   
   const decisionText = new Textbox('Solution\nfound?', {
-    left: 260,
-    top: 320,
-    fontSize: 16,
+    left: offsetX + 260 * scale,
+    top: 320 * scale,
+    fontSize: 16 * scale,
     fontWeight: 'bold',
     fontFamily: 'Arial',
     fill: '#000000',
@@ -287,18 +312,18 @@ export const createFlowchartExample = (canvas: Canvas) => {
   });
   
   const process2Text = new Textbox('Try different\napproach', {
-    left: 420,
-    top: 340,
-    fontSize: 16,
+    left: offsetX + 420 * scale,
+    top: 340 * scale,
+    fontSize: 16 * scale,
     fontWeight: 'bold',
     fontFamily: 'Arial',
     fill: '#000000',
   });
   
   const endText = new Textbox('End', {
-    left: 245,
-    top: 447,
-    fontSize: 18,
+    left: offsetX + 245 * scale,
+    top: 447 * scale,
+    fontSize: 18 * scale,
     fontWeight: 'bold',
     fontFamily: 'Arial',
     fill: '#000000',
@@ -306,17 +331,17 @@ export const createFlowchartExample = (canvas: Canvas) => {
   
   // Add yes/no labels
   const yesText = new Textbox('Yes', {
-    left: 275,
-    top: 390,
-    fontSize: 14,
+    left: offsetX + 275 * scale,
+    top: 390 * scale,
+    fontSize: 14 * scale,
     fontFamily: 'Arial',
     fill: '#000000',
   });
   
   const noText = new Textbox('No', {
-    left: 385,
-    top: 310,
-    fontSize: 14,
+    left: offsetX + 385 * scale,
+    top: 310 * scale,
+    fontSize: 14 * scale,
     fontFamily: 'Arial',
     fill: '#000000',
   });
@@ -330,8 +355,15 @@ export const createFlowchartExample = (canvas: Canvas) => {
   );
 };
 
-// Example for history timeline
+// Example for history timeline - Scale and position to fit
 export const createHistoryTimeline = (canvas: Canvas) => {
+  // Get canvas dimensions
+  const canvasWidth = canvas.width || 600;
+  const canvasHeight = canvas.height || 500;
+  
+  // Scale factor to ensure timeline fits
+  const scale = Math.min(canvasWidth / 700, 0.9);
+  
   // Add title
   const title = new Textbox('World War II Timeline', {
     left: 50,
@@ -342,22 +374,24 @@ export const createHistoryTimeline = (canvas: Canvas) => {
     fill: '#2563eb',
   });
   
-  // Create timeline line
+  // Create timeline line - adjust width based on canvas
+  const timelineWidth = Math.min(600, canvasWidth - 100);
   const timelineLine = new Line([
     50, 150,
-    650, 150
+    50 + timelineWidth, 150
   ], {
     stroke: '#000000',
     strokeWidth: 3,
   });
   
-  // Create timeline points
+  // Create timeline points - distribute evenly
+  const pointSpacing = timelineWidth / 4;
   const timelinePoints = [
-    { x: 100, y: 150, year: '1939', event: 'Germany invades Poland, starting World War II in Europe' },
-    { x: 200, y: 150, year: '1941', event: 'Japan attacks Pearl Harbor, US enters the war' },
-    { x: 300, y: 150, year: '1942', event: 'Battle of Stalingrad begins' },
-    { x: 400, y: 150, year: '1944', event: 'D-Day: Allied invasion of Normandy' },
-    { x: 500, y: 150, year: '1945', event: 'Germany surrenders, Japan surrenders after atomic bombings' },
+    { x: 50 + pointSpacing * 0, y: 150, year: '1939', event: 'Germany invades Poland, starting World War II in Europe' },
+    { x: 50 + pointSpacing * 1, y: 150, year: '1941', event: 'Japan attacks Pearl Harbor, US enters the war' },
+    { x: 50 + pointSpacing * 2, y: 150, year: '1942', event: 'Battle of Stalingrad begins' },
+    { x: 50 + pointSpacing * 3, y: 150, year: '1944', event: 'D-Day: Allied invasion of Normandy' },
+    { x: 50 + pointSpacing * 4, y: 150, year: '1945', event: 'Germany and Japan surrender, war ends' },
   ];
   
   // Add points and labels
@@ -382,12 +416,12 @@ export const createHistoryTimeline = (canvas: Canvas) => {
       fill: '#000000',
     });
     
-    // Create event description
+    // Create event description - make smaller with limited width
     const eventDesc = new Textbox(point.event, {
-      left: point.x - 100,
-      top: index % 2 === 0 ? point.y - 80 : point.y + 50,
-      width: 200,
-      fontSize: 14,
+      left: point.x - Math.min(100, pointSpacing/2),
+      top: index % 2 === 0 ? point.y - 70 : point.y + 50,
+      width: Math.min(190, pointSpacing * 0.9),
+      fontSize: 13,
       fontFamily: 'Arial',
       textAlign: 'center',
       fill: '#333333',
@@ -407,12 +441,12 @@ export const createHistoryTimeline = (canvas: Canvas) => {
     canvas.add(circle, yearLabel, eventDesc, connectingLine);
   });
   
-  // Add explanation
+  // Add explanation - positioned at the bottom
   const explanation = new Textbox('World War II was a global conflict that lasted from 1939 to 1945, involving many of the world\'s nations including all of the great powers.', {
-    left: 100,
-    top: 270,
-    width: 500,
-    fontSize: 16,
+    left: 50,
+    top: 280,
+    width: timelineWidth,
+    fontSize: 15,
     fontFamily: 'Arial',
     textAlign: 'center',
     fill: '#333333',

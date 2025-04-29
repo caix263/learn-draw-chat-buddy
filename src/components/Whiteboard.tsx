@@ -7,6 +7,7 @@ import { createMathExample, createFlowchartExample, createChemistryExample, crea
 
 const Whiteboard = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [fabricCanvas, setFabricCanvas] = useState<Canvas | null>(null);
   const [activeColor, setActiveColor] = useState('#000000');
   const [activeTool, setActiveTool] = useState<'select' | 'draw' | 'rectangle' | 'circle' | 'text' | 'eraser'>('draw');
@@ -24,7 +25,7 @@ const Whiteboard = () => {
     
     // Make the canvas responsive
     const resizeCanvas = () => {
-      const parentEl = canvasRef.current?.parentElement;
+      const parentEl = containerRef.current;
       if (!parentEl || !canvas) return;
       
       const width = parentEl.clientWidth;
@@ -33,6 +34,11 @@ const Whiteboard = () => {
       canvas.setWidth(width);
       canvas.setHeight(height);
       canvas.renderAll();
+      
+      // If example is showing, redraw it to fit new dimensions
+      if (exampleVisible && currentExample) {
+        showExample(currentExample);
+      }
     };
     
     // Initialize
@@ -107,7 +113,7 @@ const Whiteboard = () => {
         setActiveColor={setActiveColor}
         fabricCanvas={fabricCanvas}
       />
-      <div className="flex-1 relative border-t">
+      <div ref={containerRef} className="flex-1 relative border-t">
         <canvas ref={canvasRef} className="absolute inset-0" />
       </div>
       <div className="p-2 bg-gray-50 border-t flex flex-wrap gap-2">
