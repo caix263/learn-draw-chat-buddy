@@ -1,4 +1,3 @@
-
 import { FC } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -52,8 +51,7 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
     if (!fabricCanvas) return;
     setActiveTool('select');
     
-    // Add a rectangle
-    fabricCanvas.add(new fabric.Rect({
+    const rect = new fabric.Rect({
       left: 100,
       top: 100,
       fill: activeColor,
@@ -61,7 +59,8 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
       height: 60,
       strokeWidth: 2,
       stroke: '#000000',
-    }));
+    });
+    fabricCanvas.add(rect);
     fabricCanvas.renderAll();
   };
 
@@ -69,15 +68,15 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
     if (!fabricCanvas) return;
     setActiveTool('select');
     
-    // Add a circle
-    fabricCanvas.add(new fabric.Circle({
+    const circle = new fabric.Circle({
       left: 160,
       top: 100,
       fill: activeColor,
       radius: 40,
       strokeWidth: 2,
       stroke: '#000000',
-    }));
+    });
+    fabricCanvas.add(circle);
     fabricCanvas.renderAll();
   };
 
@@ -85,14 +84,14 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
     if (!fabricCanvas) return;
     setActiveTool('select');
     
-    // Add text
-    fabricCanvas.add(new fabric.Textbox('Edit this text', {
+    const text = new fabric.Textbox('Edit this text', {
       left: 100,
       top: 100,
       fontFamily: 'Arial',
       fill: activeColor,
       width: 200,
-    }));
+    });
+    fabricCanvas.add(text);
     fabricCanvas.renderAll();
   };
 

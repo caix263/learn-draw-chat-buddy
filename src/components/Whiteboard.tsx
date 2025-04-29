@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { Canvas } from 'fabric';
+import { Canvas, fabric } from 'fabric';
 import WhiteboardTools from './WhiteboardTools';
 import { toast } from 'sonner';
 

@@ -1,10 +1,9 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import ChatMessage from './ChatMessage';
-import { useToast } from '@/components/ui/toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface Message {
   id: string;
