@@ -35,27 +35,25 @@ const Index = () => {
           </div>
         ) : (
           <div className="h-[calc(100vh-180px)]">
-            <ResizablePanelGroup direction="horizontal" className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <ResizablePanel defaultSize={25} minSize={20}>
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden h-full flex">
+              <div className="w-1/3 border-r border-gray-200 h-full flex flex-col">
                 <div className="p-4 border-b border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-800">Chat with AI Tutor</h2>
                 </div>
-                <div className="h-[calc(100vh-244px)]">
+                <div className="h-[calc(100%-60px)]">
                   <ChatInterface />
                 </div>
-              </ResizablePanel>
+              </div>
               
-              <ResizableHandle withHandle />
-              
-              <ResizablePanel defaultSize={75} minSize={40}>
+              <div className="w-2/3 h-full flex flex-col">
                 <div className="p-4 border-b border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-800">Interactive Whiteboard</h2>
                 </div>
-                <div className="h-[calc(100vh-244px)]">
+                <div className="h-[calc(100%-60px)]">
                   <Whiteboard />
                 </div>
-              </ResizablePanel>
-            </ResizablePanelGroup>
+              </div>
+            </div>
           </div>
         )}
         
