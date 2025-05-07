@@ -3,7 +3,6 @@ import { useState } from 'react';
 import ChatInterface from '@/components/ChatInterface';
 import Whiteboard from '@/components/Whiteboard';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 const Index = () => {
@@ -48,8 +47,9 @@ const Index = () => {
               <div className="w-2/3 h-full flex flex-col">
                 <div className="p-4 border-b border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-800">Interactive Whiteboard</h2>
+                  <p className="text-sm text-gray-500">Draw, add shapes, and collaborate on ideas</p>
                 </div>
-                <div className="h-[calc(100%-60px)]">
+                <div className="h-[calc(100%-85px)]">
                   <Whiteboard />
                 </div>
               </div>

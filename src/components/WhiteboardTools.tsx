@@ -10,7 +10,9 @@ import {
   Text, 
   Eraser, 
   MousePointer, 
-  Trash2
+  Trash2,
+  Undo,
+  Redo
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -20,6 +22,10 @@ interface WhiteboardToolsProps {
   activeColor: string;
   setActiveColor: (color: string) => void;
   fabricCanvas: Canvas | null;
+  canUndo?: boolean;
+  canRedo?: boolean;
+  onUndo?: () => void;
+  onRedo?: () => void;
 }
 
 const WhiteboardTools: FC<WhiteboardToolsProps> = ({
@@ -27,7 +33,11 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
   setActiveTool,
   activeColor,
   setActiveColor,
-  fabricCanvas
+  fabricCanvas,
+  canUndo = false,
+  canRedo = false,
+  onUndo,
+  onRedo
 }) => {
   const colors = [
     '#000000', // Black
@@ -206,6 +216,42 @@ const WhiteboardTools: FC<WhiteboardToolsProps> = ({
             aria-label={`Color: ${color}`}
           />
         ))}
+        
+        <div className="h-6 border-r border-gray-300 mx-1"></div>
+        
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="h-8 w-8" 
+                onClick={onUndo}
+                disabled={!canUndo}
+              >
+                <Undo className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Undo</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="h-8 w-8" 
+                onClick={onRedo}
+                disabled={!canRedo}
+              >
+                <Redo className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Redo</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       
       <TooltipProvider>

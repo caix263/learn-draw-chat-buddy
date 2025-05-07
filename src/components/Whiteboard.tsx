@@ -13,6 +13,10 @@ const Whiteboard = () => {
   const [activeTool, setActiveTool] = useState<'select' | 'draw' | 'rectangle' | 'circle' | 'text' | 'eraser'>('draw');
   const [exampleVisible, setExampleVisible] = useState(false);
   const [currentExample, setCurrentExample] = useState<'math' | 'chemistry' | 'flowchart' | 'history'>('math');
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
+  const [history, setHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -51,7 +55,24 @@ const Whiteboard = () => {
       canvas.freeDrawingBrush.width = 2;
     }
     
+    // Setup history tracking for undo/redo
+    canvas.on('object:added', () => {
+      saveToHistory(canvas);
+    });
+    
+    canvas.on('object:modified', () => {
+      saveToHistory(canvas);
+    });
+    
+    canvas.on('object:removed', () => {
+      saveToHistory(canvas);
+    });
+    
     setFabricCanvas(canvas);
+    
+    // Initialize history with empty canvas
+    saveToHistory(canvas);
+    
     toast("Whiteboard ready!");
     
     return () => {
@@ -59,6 +80,61 @@ const Whiteboard = () => {
       canvas.dispose();
     };
   }, []);
+  
+  // Save current canvas state to history
+  const saveToHistory = (canvas: Canvas) => {
+    if (!canvas) return;
+    
+    // Get canvas as JSON
+    const json = JSON.stringify(canvas.toJSON());
+    
+    // If we're not at the end of the history array, remove future states
+    if (historyIndex < history.length - 1) {
+      setHistory(prev => prev.slice(0, historyIndex + 1));
+    }
+    
+    // Add new state to history
+    setHistory(prev => [...prev, json]);
+    setHistoryIndex(prev => prev + 1);
+    
+    // Update undo/redo availability
+    setCanUndo(true);
+    setCanRedo(false);
+  };
+  
+  // Undo last action
+  const handleUndo = () => {
+    if (historyIndex <= 0 || !fabricCanvas) return;
+    
+    const newIndex = historyIndex - 1;
+    setHistoryIndex(newIndex);
+    
+    // Load previous state
+    fabricCanvas.loadFromJSON(JSON.parse(history[newIndex]), () => {
+      fabricCanvas.renderAll();
+      setCanUndo(newIndex > 0);
+      setCanRedo(true);
+    });
+    
+    toast("Undo");
+  };
+  
+  // Redo last undone action
+  const handleRedo = () => {
+    if (historyIndex >= history.length - 1 || !fabricCanvas) return;
+    
+    const newIndex = historyIndex + 1;
+    setHistoryIndex(newIndex);
+    
+    // Load next state
+    fabricCanvas.loadFromJSON(JSON.parse(history[newIndex]), () => {
+      fabricCanvas.renderAll();
+      setCanRedo(newIndex < history.length - 1);
+      setCanUndo(true);
+    });
+    
+    toast("Redo");
+  };
   
   // Handle tool changes
   useEffect(() => {
@@ -101,6 +177,10 @@ const Whiteboard = () => {
     setExampleVisible(true);
     
     fabricCanvas.renderAll();
+    
+    // Add this state to history
+    saveToHistory(fabricCanvas);
+    
     toast(`Showing ${type} example`);
   };
 
@@ -112,6 +192,10 @@ const Whiteboard = () => {
         activeColor={activeColor}
         setActiveColor={setActiveColor}
         fabricCanvas={fabricCanvas}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
       />
       <div ref={containerRef} className="flex-1 relative border-t">
         <canvas ref={canvasRef} className="absolute inset-0" />
