@@ -1,185 +1,114 @@
 
-import { Canvas, Text, Circle, Group, IEvent, Line } from 'fabric';
+import { Canvas, Circle, Textbox, Line, Rect } from 'fabric';
 
+// Example for multiple choice questions
 export const createQuizExample = (canvas: Canvas) => {
-  // Clear canvas for the new example
-  canvas.clear();
-  canvas.backgroundColor = '#ffffff';
+  // Get canvas dimensions for better positioning
+  const canvasWidth = canvas.width || 600;
+  const canvasHeight = canvas.height || 500;
   
-  // Quiz title
-  const title = new Text('Multiple Choice Question', {
+  // Add title
+  const title = new Textbox('Multiple Choice Question', {
     left: 50,
     top: 30,
     fontSize: 24,
     fontWeight: 'bold',
-    fill: '#333333',
-    fontFamily: 'Arial'
+    fontFamily: 'Arial',
+    fill: '#2563eb',
   });
   
-  // Question
-  const question = new Text('What is the capital city of Japan?', {
+  // Add question
+  const question = new Textbox('What is the capital of France?', {
     left: 50,
     top: 80,
     fontSize: 18,
-    fill: '#333333',
-    fontFamily: 'Arial'
+    fontFamily: 'Arial',
+    fill: '#000000',
+    width: canvasWidth - 100,
   });
   
-  // Answer options
+  // Add options
   const options = [
-    { text: 'A. Beijing', correct: false },
-    { text: 'B. Tokyo', correct: true },
-    { text: 'C. Seoul', correct: false },
-    { text: 'D. Bangkok', correct: false },
+    { text: 'A) London', correct: false },
+    { text: 'B) Paris', correct: true },
+    { text: 'C) Berlin', correct: false },
+    { text: 'D) Madrid', correct: false },
   ];
   
-  // Variables to track state
-  let selectedOption: Group | null = null;
-  let feedbackShown = false;
+  // Show answer status
+  const userAnswer = 'B';
+  const correctAnswer = 'B';
+  const isCorrect = userAnswer === correctAnswer;
   
-  // Create option groups (circle + text)
-  const optionGroups = options.map((option, index) => {
-    const circle = new Circle({
+  const optionObjects = [];
+  
+  options.forEach((option, index) => {
+    const top = 130 + index * 50;
+    
+    // Option background
+    const bgColor = option.text.startsWith(userAnswer) 
+      ? (option.correct ? '#86efac' : '#fecaca')  // Green if correct, red if wrong
+      : (option.correct ? '#d9f99d' : '#ffffff'); // Light green for correct answer, white for others
+    
+    const optionBg = new Rect({
       left: 50,
-      top: 130 + (index * 50),
-      radius: 12,
-      fill: '#ffffff',
-      stroke: '#666666',
-      strokeWidth: 2,
-      selectable: true
+      top,
+      width: 350,
+      height: 40,
+      fill: bgColor,
+      rx: 5,
+      ry: 5,
     });
     
-    const text = new Text(option.text, {
-      left: 80,
-      top: 120 + (index * 50),
+    // Option text
+    const optionText = new Textbox(option.text, {
+      left: 60,
+      top: top + 10,
       fontSize: 16,
-      fill: '#333333',
       fontFamily: 'Arial',
-      selectable: false
+      fill: '#000000',
     });
     
-    const group = new Group([circle, text], {
-      left: 50,
-      top: 130 + (index * 50),
-      selectable: true,
-      subTargetCheck: true,
-      interactive: true,
-    });
+    // If this is the user's answer, add a mark
+    if (option.text.startsWith(userAnswer)) {
+      const mark = new Textbox(option.correct ? '✓' : '✗', {
+        left: 380,
+        top: top + 5,
+        fontSize: 24,
+        fontFamily: 'Arial',
+        fill: option.correct ? '#16a34a' : '#dc2626',
+      });
+      optionObjects.push(mark);
+    }
     
-    // Store the correct answer status with the group
-    group.set('correct', option.correct);
-    
-    // Add click event to each option
-    group.on('selected', function(e: IEvent<MouseEvent>) {
-      if (feedbackShown) return; // Don't allow selection after feedback is shown
-      
-      // Reset previous selection
-      if (selectedOption) {
-        const prevCircle = selectedOption.getObjects()[0] as Circle;
-        prevCircle.set({ fill: '#ffffff' });
-      }
-      
-      // Highlight new selection
-      const currentCircle = group.getObjects()[0] as Circle;
-      currentCircle.set({ fill: '#bbdefb' });
-      selectedOption = group;
-      
-      canvas.renderAll();
-    });
-    
-    return group;
+    optionObjects.push(optionBg, optionText);
   });
   
-  // Submit button
-  const submitBtn = new Group([
-    new Text('Check Answer', {
-      left: 0,
-      top: 0,
-      fontSize: 16,
-      fill: '#ffffff',
-      fontFamily: 'Arial',
-      textAlign: 'center',
-    })
-  ], {
+  // Add result message
+  const resultMessage = new Textbox(
+    isCorrect ? 'Correct! Well done!' : 'Incorrect. Try again!', {
     left: 50,
-    top: 350,
-    width: 150,
-    height: 40,
-    backgroundColor: '#1976d2',
-    selectable: true,
-  });
-  
-  // Style the button
-  submitBtn.set({
-    rx: 5,
-    ry: 5,
-    padding: 10,
-  });
-  
-  // Feedback text elements (hidden initially)
-  const resultText = new Text('', {
-    left: 50,
-    top: 400,
+    top: 340,
     fontSize: 18,
     fontWeight: 'bold',
     fontFamily: 'Arial',
-    visible: false
+    fill: isCorrect ? '#16a34a' : '#dc2626',
   });
   
-  const explanationText = new Text('Tokyo is the capital and largest city of Japan.\nIt serves as the country\'s political, economic,\nand cultural center.', {
+  // Add explanation
+  const explanation = new Textbox(
+    'Paris is the capital and most populous city of France. It is located on the Seine River in northern France.', {
     left: 50,
-    top: 430,
+    top: 380,
+    width: canvasWidth - 100,
     fontSize: 16,
     fontFamily: 'Arial',
-    visible: false,
-    lineHeight: 1.3
+    fill: '#333333',
   });
   
-  // Submit button click handler
-  submitBtn.on('selected', function() {
-    if (!selectedOption || feedbackShown) return;
-    
-    feedbackShown = true;
-    
-    const isCorrect = selectedOption.get('correct') === true;
-    
-    // Show feedback based on selected answer
-    resultText.set({
-      text: isCorrect ? 'Correct! ✓' : 'Incorrect! ✗',
-      fill: isCorrect ? '#388e3c' : '#d32f2f',
-      visible: true
-    });
-    
-    // Show explanation
-    explanationText.set({
-      visible: true
-    });
-    
-    // Highlight correct answer
-    optionGroups.forEach(group => {
-      const isCorrectOption = group.get('correct') === true;
-      const circle = group.getObjects()[0] as Circle;
-      
-      if (isCorrectOption) {
-        circle.set({
-          stroke: '#388e3c',
-          strokeWidth: 3
-        });
-      }
-    });
-    
-    canvas.renderAll();
-  });
+  // Add objects to canvas
+  canvas.add(title, question, resultMessage, explanation);
   
-  // Add all elements to canvas
-  canvas.add(
-    title,
-    question,
-    resultText,
-    explanationText,
-    submitBtn,
-    ...optionGroups
-  );
-  
-  canvas.renderAll();
+  // Add option objects
+  optionObjects.forEach(obj => canvas.add(obj));
 };
