@@ -119,12 +119,16 @@ export const useWhiteboardCanvas = (
     
     // If we're not at the end of the history array, remove future states
     if (historyIndex < history.length - 1) {
-      setHistory(prev => prev.slice(0, historyIndex + 1));
+      // Fix: Use direct array instead of function for the setter
+      const newHistory = history.slice(0, historyIndex + 1);
+      setHistory([...newHistory, json]);
+    } else {
+      // Fix: Use direct array instead of function for the setter
+      setHistory([...history, json]);
     }
     
-    // Add new state to history
-    setHistory(prev => [...prev, json]);
-    setHistoryIndex(prev => prev + 1);
+    // Fix: Use direct value instead of function for the setter
+    setHistoryIndex(historyIndex + 1);
     
     // Update undo/redo availability
     setCanUndo(true);
