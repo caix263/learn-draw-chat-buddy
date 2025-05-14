@@ -65,30 +65,21 @@ export const createBiologyExample = (canvas: Canvas) => {
   });
   
   // Create endoplasmic reticulum (wavy lines)
-  const erPoints1 = [
+  // Fixed: Line constructor requires points in format [x1, y1, x2, y2] for each segment
+  const erLine1 = new Line([
     centerX - 115, centerY - 20,
-    centerX - 95, centerY - 15,
-    centerX - 75, centerY - 25,
-    centerX - 55, centerY - 15,
-    centerX - 35, centerY - 25,
-  ];
-  
-  const erLine1 = new Line(erPoints1, {
+    centerX - 35, centerY - 25
+  ], {
     stroke: '#0EA5E9',
     strokeWidth: 2,
     fill: '',
     strokeLineCap: 'round',
   });
   
-  const erPoints2 = [
+  const erLine2 = new Line([
     centerX - 115, centerY - 10,
-    centerX - 95, centerY - 5,
-    centerX - 75, centerY - 15,
-    centerX - 55, centerY - 5,
-    centerX - 35, centerY - 15,
-  ];
-  
-  const erLine2 = new Line(erPoints2, {
+    centerX - 35, centerY - 15
+  ], {
     stroke: '#0EA5E9',
     strokeWidth: 2,
     fill: '',
@@ -97,13 +88,13 @@ export const createBiologyExample = (canvas: Canvas) => {
   
   // Create Golgi apparatus (stacked curves)
   const golgiPoints = [
-    [centerX - 95, centerY + 20, centerX - 75, centerY + 20, centerX - 55, centerY + 15],
-    [centerX - 95, centerY + 30, centerX - 75, centerY + 30, centerX - 55, centerY + 25],
-    [centerX - 95, centerY + 40, centerX - 75, centerY + 40, centerX - 55, centerY + 35],
+    [centerX - 95, centerY + 20, centerX - 55, centerY + 15],
+    [centerX - 95, centerY + 30, centerX - 55, centerY + 25],
+    [centerX - 95, centerY + 40, centerX - 55, centerY + 35],
   ];
   
   const golgiLines = golgiPoints.map(points => 
-    new Line([points[0], points[1], points[2], points[3], points[4], points[5]], {
+    new Line(points, {
       stroke: '#16A34A',
       strokeWidth: 2,
       fill: '',
