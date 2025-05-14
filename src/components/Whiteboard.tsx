@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { Canvas } from 'fabric';
 import WhiteboardTools from './WhiteboardTools';
@@ -13,7 +12,8 @@ import {
   createLanguageExample,
   createBiologyExample,
   createProgrammingExample,
-  createArtExample
+  createArtExample,
+  createQuizExample
 } from '@/utils/whiteboardExamples';
 
 const Whiteboard = () => {
@@ -24,7 +24,7 @@ const Whiteboard = () => {
   const [activeTool, setActiveTool] = useState<'select' | 'draw' | 'rectangle' | 'circle' | 'text' | 'eraser'>('draw');
   const [exampleVisible, setExampleVisible] = useState(false);
   const [currentExample, setCurrentExample] = useState<
-    'math' | 'chemistry' | 'flowchart' | 'history' | 'physics' | 'geometry' | 'language' | 'biology' | 'programming' | 'art'
+    'math' | 'chemistry' | 'flowchart' | 'history' | 'physics' | 'geometry' | 'language' | 'biology' | 'programming' | 'art' | 'quiz'
   >('math');
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
@@ -202,6 +202,9 @@ const Whiteboard = () => {
       case 'art':
         createArtExample(fabricCanvas);
         break;
+      case 'quiz':
+        createQuizExample(fabricCanvas);
+        break;
     }
     
     setCurrentExample(type);
@@ -264,6 +267,12 @@ const Whiteboard = () => {
             className={`px-3 py-1 text-xs rounded-full ${currentExample === 'physics' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
           >
             Physics
+          </button>
+          <button 
+            onClick={() => showExample('quiz')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'quiz' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Quiz
           </button>
         </div>
         {/* Second row of examples */}

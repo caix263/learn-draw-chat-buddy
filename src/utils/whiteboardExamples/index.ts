@@ -10,3 +10,5 @@ export { createLanguageExample } from './languageExample';
 export { createBiologyExample } from './biologyExample';
 export { createProgrammingExample } from './programmingExample';
 export { createArtExample } from './artExample';
+export { createQuizExample } from './quizExample';
+
