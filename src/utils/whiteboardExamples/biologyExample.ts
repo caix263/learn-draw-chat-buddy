@@ -94,7 +94,8 @@ export const createBiologyExample = (canvas: Canvas) => {
   ];
   
   const golgiLines = golgiPoints.map(points => 
-    new Line(points, {
+    // Fix: Ensure we pass exactly four numbers to the Line constructor
+    new Line([points[0], points[1], points[2], points[3]], {
       stroke: '#16A34A',
       strokeWidth: 2,
       fill: '',
