@@ -3,7 +3,18 @@ import { useEffect, useRef, useState } from 'react';
 import { Canvas } from 'fabric';
 import WhiteboardTools from './WhiteboardTools';
 import { toast } from 'sonner';
-import { createMathExample, createFlowchartExample, createChemistryExample, createHistoryTimeline } from '@/utils/whiteboardExamples';
+import { 
+  createMathExample, 
+  createFlowchartExample, 
+  createChemistryExample, 
+  createHistoryTimeline,
+  createPhysicsExample,
+  createGeometryExample,
+  createLanguageExample,
+  createBiologyExample,
+  createProgrammingExample,
+  createArtExample
+} from '@/utils/whiteboardExamples';
 
 const Whiteboard = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -12,7 +23,9 @@ const Whiteboard = () => {
   const [activeColor, setActiveColor] = useState('#000000');
   const [activeTool, setActiveTool] = useState<'select' | 'draw' | 'rectangle' | 'circle' | 'text' | 'eraser'>('draw');
   const [exampleVisible, setExampleVisible] = useState(false);
-  const [currentExample, setCurrentExample] = useState<'math' | 'chemistry' | 'flowchart' | 'history'>('math');
+  const [currentExample, setCurrentExample] = useState<
+    'math' | 'chemistry' | 'flowchart' | 'history' | 'physics' | 'geometry' | 'language' | 'biology' | 'programming' | 'art'
+  >('math');
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
@@ -150,7 +163,7 @@ const Whiteboard = () => {
   }, [activeTool, activeColor, fabricCanvas]);
   
   // Show example content in the whiteboard
-  const showExample = (type: 'math' | 'chemistry' | 'flowchart' | 'history') => {
+  const showExample = (type: typeof currentExample) => {
     if (!fabricCanvas) return;
     
     // Clear the canvas first
@@ -170,6 +183,24 @@ const Whiteboard = () => {
         break;
       case 'history':
         createHistoryTimeline(fabricCanvas);
+        break;
+      case 'physics':
+        createPhysicsExample(fabricCanvas);
+        break;
+      case 'geometry':
+        createGeometryExample(fabricCanvas);
+        break;
+      case 'language':
+        createLanguageExample(fabricCanvas);
+        break;
+      case 'biology':
+        createBiologyExample(fabricCanvas);
+        break;
+      case 'programming':
+        createProgrammingExample(fabricCanvas);
+        break;
+      case 'art':
+        createArtExample(fabricCanvas);
         break;
     }
     
@@ -202,30 +233,72 @@ const Whiteboard = () => {
       </div>
       <div className="p-2 bg-gray-50 border-t flex flex-wrap gap-2">
         <div className="text-sm font-medium mr-2">AI Tutor Examples:</div>
-        <button 
-          onClick={() => showExample('math')} 
-          className={`px-3 py-1 text-xs rounded-full ${currentExample === 'math' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
-        >
-          Math Equation
-        </button>
-        <button 
-          onClick={() => showExample('chemistry')} 
-          className={`px-3 py-1 text-xs rounded-full ${currentExample === 'chemistry' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
-        >
-          Chemistry
-        </button>
-        <button 
-          onClick={() => showExample('flowchart')} 
-          className={`px-3 py-1 text-xs rounded-full ${currentExample === 'flowchart' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
-        >
-          Flowchart
-        </button>
-        <button 
-          onClick={() => showExample('history')} 
-          className={`px-3 py-1 text-xs rounded-full ${currentExample === 'history' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
-        >
-          History Timeline
-        </button>
+        {/* First row of examples */}
+        <div className="flex flex-wrap gap-2">
+          <button 
+            onClick={() => showExample('math')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'math' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Math Equation
+          </button>
+          <button 
+            onClick={() => showExample('chemistry')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'chemistry' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Chemistry
+          </button>
+          <button 
+            onClick={() => showExample('flowchart')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'flowchart' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Flowchart
+          </button>
+          <button 
+            onClick={() => showExample('history')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'history' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            History Timeline
+          </button>
+          <button 
+            onClick={() => showExample('physics')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'physics' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Physics
+          </button>
+        </div>
+        {/* Second row of examples */}
+        <div className="flex flex-wrap gap-2 mt-1 w-full">
+          <button 
+            onClick={() => showExample('geometry')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'geometry' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Geometry
+          </button>
+          <button 
+            onClick={() => showExample('language')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'language' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Language Learning
+          </button>
+          <button 
+            onClick={() => showExample('biology')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'biology' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Biology
+          </button>
+          <button 
+            onClick={() => showExample('programming')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'programming' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Programming
+          </button>
+          <button 
+            onClick={() => showExample('art')} 
+            className={`px-3 py-1 text-xs rounded-full ${currentExample === 'art' && exampleVisible ? 'bg-tutor-primary text-white' : 'bg-gray-200'}`}
+          >
+            Art & Design
+          </button>
+        </div>
       </div>
     </div>
   );
